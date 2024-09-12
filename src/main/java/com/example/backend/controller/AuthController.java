@@ -5,6 +5,7 @@ import com.example.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 @RestController
@@ -22,11 +23,8 @@ public class AuthController {
         String username = loginRequest.get("username");
         String password = loginRequest.get("password");
 
-        // Check hardcoded credentials
         if (username.equals(userService.getHardcodedUser()) && password.equals(userService.getHardcodedPassword())) {
             String jwt = jwtUtil.generateToken(username);
-
-            // Add JWT to Authorization header and return success message
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + jwt)
                     .body("Login successful");

@@ -24,11 +24,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for API testing
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/login").permitAll() // Permit login without authentication
-                        .anyRequest().authenticated()) // Require authentication for all other requests
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless session for JWT
+                        .requestMatchers("/auth/login").permitAll()  // Allow access to login
+                        .anyRequest().authenticated())               // Secure other endpoints
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless sessions
 
         // Add JWT filter before UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -36,7 +36,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Expose AuthenticationManager bean
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
